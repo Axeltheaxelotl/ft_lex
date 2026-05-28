@@ -356,6 +356,11 @@ alanty gros
 
 
 
+
+
+
+
+
 ft_lex — Liste courte des trucs à apprendre
 1. Bases des lexers
 
