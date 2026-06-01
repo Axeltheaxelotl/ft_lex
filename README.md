@@ -3095,3 +3095,320 @@ regex
 Et c’est exactement ce que ce projet veut enseigner.
 
 
+
+
+
+
+
+
+
+7. Exemple complet
+
+Considérons :
+
+q0 --a--> q1
+q0 --a--> q2
+
+q1 --b--> q3
+q2 --c--> q4
+
+État initial :
+
+D0 = {q0}
+
+Que se passe-t-il sur a ?
+
+Depuis :
+
+q0
+
+on peut aller vers :
+
+q1
+q2
+
+Donc :
+
+move({q0},a)
+=
+{q1,q2}
+
+On crée :
+
+D1 = {q1,q2}
+8. Continuer
+
+Depuis :
+
+D1 = {q1,q2}
+
+Sur b :
+
+q1 -> q3
+
+Donc :
+
+{q3}
+
+Créer :
+
+D2 = {q3}
+
+Sur c :
+
+q2 -> q4
+
+Créer :
+
+D3 = {q4}
+
+DFA obtenu :
+
+D0 --a--> D1
+
+D1 --b--> D2
+D1 --c--> D3
+9. L'algorithme officiel
+
+Initialisation :
+
+D0 = ε-closure(start)
+
+Mettre D0 dans une file.
+
+Tant que la file n'est pas vide :
+
+Prendre un état DFA :
+
+S
+
+Pour chaque caractère :
+
+c
+
+calculer :
+
+move(S,c)
+
+Puis :
+
+ε-closure(move(S,c))
+
+Si cet ensemble n'existe pas :
+
+nouvel état DFA
+
+Ajouter la transition.
+
+Répéter.
+
+10. move()
+
+Fonction très importante.
+
+Si :
+
+S={q1,q2,q5}
+
+Alors :
+
+move(S,'a')
+
+signifie :
+
+tous les états atteignables avec un a.
+
+Exemple :
+
+q1 --a--> q7
+q2 --a--> q9
+
+Résultat :
+
+{q7,q9}
+11. États acceptants
+
+Très simple.
+
+Si un ensemble contient :
+
+au moins un état final NFA
+
+alors :
+
+l'état DFA est final
+
+Exemple :
+
+D4 = {q2,q7,q12}
+
+si :
+
+q12
+
+est final :
+
+D4
+
+est final.
+
+12. Cas important dans ft_lex
+Supposons :
+
+%%
+while      KW_WHILE
+[a-z]+     IDENTIFIER
+%%
+
+Après Thompson :
+
+Tu as un énorme NFA.
+
+Après subset construction :
+
+Tu obtiens des états DFA.
+
+Un état DFA peut contenir :
+
+{while_state7,
+ identifier_state4,
+ identifier_state5}
+
+Donc :
+
+plusieurs règles actives simultanément
+13. Le problème du conflit
+
+Considérons :
+
+%%
+if      IF
+[a-z]+  IDENTIFIER
+%%
+
+Input :
+
+if
+
+Le DFA peut reconnaître :
+
+IF
+
+et
+
+IDENTIFIER
+
+en même temps.
+
+Qui gagne ?
+
+Lex applique :
+
+Règle 1
+
+Longest Match
+
+plus longue correspondance
+Règle 2
+
+First Rule
+
+première règle du fichier
+
+Donc :
+
+IF
+
+gagne.
+
+Cette information doit être stockée dans les états DFA.
+
+14. Représentation pratique
+
+Très souvent :
+
+typedef struct s_dfa_state
+{
+    uint64_t nfa_states;
+} t_dfa_state;
+
+pour les petits automates.
+
+Ou :
+
+typedef struct s_set
+{
+    int *states;
+    int count;
+} t_set;
+
+Chaque état DFA est un ensemble.
+
+15. Pourquoi c'est ULTRA IMPORTANT dans ft_lex ?
+
+Parce que Thompson seul ne suffit pas.
+
+Le sujet demande :
+
+compiled deterministic finite automaton
+
+Donc :
+
+Regex
+ ↓
+AST
+ ↓
+Thompson
+ ↓
+NFA
+ ↓
+Subset Construction
+ ↓
+DFA
+ ↓
+Table DFA
+ ↓
+Code C
+16. Ce que le correcteur attend souvent
+
+Si on te demande :
+
+Qu'est-ce que la subset construction ?
+
+Réponse :
+
+C'est l'algorithme qui transforme un automate non déterministe (NFA) en automate déterministe (DFA). Chaque état du DFA représente un ensemble d'états du NFA. On calcule d'abord l'ε-closure de l'état initial, puis pour chaque ensemble et chaque symbole, on applique move() suivi d'un nouvel ε-closure. Les ensembles obtenus deviennent les nouveaux états du DFA.
+
+Le résumé à retenir
+Thompson
+Regex
+ ↓
+NFA
+Subset Construction
+NFA
+ ↓
+DFA
+Génération du lexer
+DFA
+ ↓
+switch/case
+ou
+table[state][char]
+
+Donc dans ft_lex, Thompson et Subset Construction sont les deux algorithmes centraux :
+
+Regex
+ ↓
+Thompson
+ ↓
+NFA
+ ↓
+Subset Construction
+ ↓
+DFA
+ ↓
+lex.yy.c
+
+Sans Thompson, tu n'obtiens pas le NFA.
+
+Sans Subset Construction, tu ne peux pas produire le DFA
