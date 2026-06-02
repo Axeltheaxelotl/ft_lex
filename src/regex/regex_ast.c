@@ -23,7 +23,7 @@ static t_ast *ast_new(t_ast_type type)
     t_ast *node;
     node = malloc(sizeof(t_ast));
     if (!node)
-        return NULL
+        return NULL;
     node->type = type;
     node->value = 0;
     node->left = NULL;
@@ -52,16 +52,14 @@ t_ast *ast_char(char c)
 }
 
 
+//CONCAT
 /*
-concat
-pour :
-    ab
-je veut
-         CONCAT
-         /   \
-        a     b
+pour ab :
+    CONCAT
+    /   \
+   a     b
 */
-t_ast *ast_or(t_ast *left, t_ast *right)
+t_ast *ast_concat(t_ast *left, t_ast *right)
 {
     t_ast *node;
     node = ast_new(AST_OR);
@@ -82,7 +80,7 @@ pour a*
       a
 */
 
-t_ast *ast_char(t_ast *child)
+t_ast *ast_star(t_ast *child)
 {
     t_ast *node;
     node = ast_new(AST_STAR);
@@ -106,3 +104,15 @@ t_ast *ast_plus(t_ast *child)
 }
 
 
+
+
+//QUESTION
+t_ast *ast_question(t_ast *child)
+{
+    t_ast *node;
+    node = ast_new(AST_QUESTION);
+    if (!node)
+        return NULL;
+    node->left = child;
+    return node;
+}
