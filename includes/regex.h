@@ -10,11 +10,12 @@ transforme :
 en liste de tokens
 */
 
-typedef struct s_parser
-{
-    char    *input;
-    size_t  pos;
-} t_parser;
+typedef struct s_regex_lexer                                                                     
+{                                                                                                
+    char    *input;                                                                              
+    size_t  pos;                                                                                 
+} t_regex_lexer;                                                                                 
+                         
 
 t_token regex_next_token(t_regex_lexer *lexer);
 t_ast *regex_parse(char *regex);

@@ -47,8 +47,15 @@ t_token regex_next_token(t_regex_lexer *lx)
 
         //char normal
         if (!is_special(c))
-            return make_token(TOK_CHAR, c, lx->pos)
+            return make_token(TOK_CHAR, c, lx->pos);
 
+        //classes de caracteres
+        if (c == '[')
+            return make_token(TOK_LBRACKET, c);
+        if (c == ']')
+            return make_token(TOK_RBRACKET, c);
+        if (c == '-')
+            return make_token(TOK_DASH, c);
         //erreur
         syntax_error("regex", lx->pos, "invalid character");
     }
