@@ -24,4 +24,4 @@ typedef struct s_dfa
 t_dfa *nfa_to_dfa(t_nfa *nfa);
 void print_dfa(t_dfa *dfa);
 
-#enfid
+#enfif

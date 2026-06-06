@@ -62,7 +62,7 @@ pour ab :
 t_ast *ast_concat(t_ast *left, t_ast *right)
 {
     t_ast *node;
-    node = ast_new(AST_OR);
+    node = ast_new(AST_CONCAT);
     if (!node)
         return NULL;
     node->left = left;
@@ -115,4 +115,19 @@ t_ast *ast_question(t_ast *child)
         return NULL;
     node->left = child;
     return node;
+}
+
+
+//OR
+t_ast *ast_or(t_ast *left, t_ast *right)
+{
+    t_ast *node;
+    node = ast_new(AST_OR);
+    if (!node)
+    {
+        return NULL;
+    }
+    node->left = left;
+    node->right = right;
+    return node
 }

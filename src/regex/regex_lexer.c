@@ -49,11 +49,11 @@ t_token regex_next_token(t_regex_lexer *lx)
         if (!is_special(c))
             return make_token(TOK_CHAR, c, lx->pos);
 
-        //classes de caracteres
+        //classes de caracteres (seul [ est utile au lexer pour parser le reste dans brackets])
         if (c == '[')
             return make_token(TOK_LBRACKET, c);
-        if (c == ']')
-            return make_token(TOK_RBRACKET, c);
+       // if (c == ']')
+         //   return make_token(TOK_RBRACKET, c);
         if (c == '-')
             return make_token(TOK_DASH, c);
         //erreur

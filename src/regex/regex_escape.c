@@ -1,7 +1,7 @@
 #include "ft_lex.h"
 
 //traduit les sequences d echappement classqiues
-char regex_unespace_char(char c)
+char regex_unescpace_char(char c)
 {
     if (c == 'n')
         return '\n';

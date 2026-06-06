@@ -52,5 +52,23 @@ typedef struct s_nfa
 
 t_nfa *nfa_from_ast(t_ast *ast);
 void print_nfa(t_nfa *nfa);
+t_nfa_state *nfa_create_state(int *id_counter);
+void nfa_add_transition(t_nfa_state *from, t_nfa_state *to, t_transition_type type, char symbol);
+void nfa_add_epsilon(t_nfa_state *from, t_nfa_state *to);
+void nfa_add_char_transition(t_nfa_state *from, t_nfa_state *to, char symbol);
+t_nfa *nfa_new(void);
+bool nfa_is_epsilon_transition(t_nfa_transition *transition);
+
+//moteur de thompson
+t_nfa *nfa_from_ast(t_ats *ast);
+t_nfa *thompson_build(t_ast *ast, int *id_counter);
+t_nfa *thompson_char(char c,  int *id_counter);
+t_nfa *thompson_concat(t_ast *ast, int *id_counter);
+t_nfa *thompson_or(t_ast *ast, int *id_counter);
+t_nfa *thompson_star(t_ast *ast, int *id_counter);
+t_nfa *thompson_plus(t_ast *ast, int *id_counter);
+t_nfa *thompson_optional(t_ast *ast, int *id_counter);
+
+void print_nfa(t_nfa *nfa);
 
 #endif

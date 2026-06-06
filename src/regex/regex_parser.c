@@ -393,7 +393,7 @@ t_ast *regex_parse(char *regex)
 
     if (peek(&p) != '\0')
     {
-        syntax_error("regex", p.pos, "unexpected character");
+        syntax_error("regex", p.pos, "caractere pas attendue a la fin de l expression");
         return NULL;
     }
 
