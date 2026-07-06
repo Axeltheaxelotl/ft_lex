@@ -24,6 +24,7 @@ typedef struct s_dfa_state
 {
     int id;
     bool accepting;
+    int accepting_rule; //index de la regle dans t_lex_file.rules[]
     int transition[DFA_ALPHABET];
 }t_dfa_state;
 
