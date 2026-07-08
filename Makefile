@@ -56,7 +56,7 @@ SRCS = src/ast/ast_create.c \
 
 BONUS_SRCS = src/bonus/bonus_polyglotism.c
 
-ifdef WITH_BONUS
+ifdef BONUS
     SRCS += $(BONUS_SRCS)
     CFLAGS += -DBONUS
 endif
@@ -72,24 +72,49 @@ RUNTIME_OBJS = $(RUNTIME_SRCS:src/%.c=$(OBJS_DIR)%.o)
 all: $(NAME) $(LIBL)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 $(LIBL): $(RUNTIME_OBJS)
-	ar rcs $(LIBL) $(RUNTIME_OBJS)
+	@ar rcs $(LIBL) $(RUNTIME_OBJS)
 
 $(OBJS_DIR)%.o: src/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJS_DIR)
+	@rm -rf $(OBJS_DIR) 
 
 fclean: clean
-	rm -f $(NAME) $(LIBL)
+	@rm -f $(NAME) $(LIBL) rm -rf lex.yy.c lex.yy.py
 
 re: fclean all
 
 bonus:
-	$(MAKE) WITH_BONUS=1 all
+	$(MAKE) BONUS=1 all
 
 .PHONY: all clean fclean re bonus
+
+
+
+Input text:
+FT LEX
+More cool stuff
+
+    Scrolling Text Time Waster
+    Chain Letter Archive
+    Image Glitcher
+    Text Color Fader
+    Keyboard Layout Analyzer
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄      ▄▄▄▄▄▄        ▄▄▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄
+██▄▄▄▄▄▄▄▄▄██ ██▄▄▄▄▄▄▄▄▄▄▄▄▄▄██      ██▄▄██        ██▄▄▄▄▄▄▄▄▄██ ██▄▄██ ██▄▄██
+████▀▀▀▀▀████ ███▀▀▀▀▀██▀▀▀▀▀███      ██████        ████▀▀▀▀▀████ ██████ ██████
+█████▄▀██████ ████▄▀█████▄▀█████      ██████        █████▄▀██████ ██████ ██████
+██▓█ █ █▄▄▄▄▀ █▄▄▄▀ ██▓█ █ █▄▄▄▀      ██▓███        ██▓█ █ █▄▄▄▄▀ ██▒▓██▄▀█▓▓██
+██▒▓ ▀▄▄▄▄▄▄▄       ██▒▓ █            ██░▒██        ██▒▓ ▀▄▄▄▄▄▄▄  ██▒▄▄▄▄▄███ 
+██░▒▒▒▒▒▒▒▒ █       ██░▒▓█            █▓█░▓█        ██░▒▒▒▒▒▒▒▒ █ █▓█░▓▄▄▄▓▒░▓█
+█▓█░▓▄▄▄▄▄▄▄▀       █▓█░▓█            █▒▓█▒█ ▄▀▀▀▀█ █▓█░▓▄▀▀▀▀▀▀▀ █▒▓█▒█ █░▒░▒█
+█▒▓█▒█              █▒▓█▒█            █░▒▓░█ █ ▓▓ █ █▒▓█▒█ ▄▀▀▀▀█ █░▒▓░█ █▓░▓░█
+█ ░▒ █              █ ░▒ █            █ ░▒ ▀▀▀ ▒▒ █ █ ░▒ ▀▀▀ ▒▒ █ █ ▒▒ █ █ ▒▒ █
+█ ░░ █              █ ░░ █            █ ░░░░░░░░░ █ █ ░░░░░░░░░ █ █ ░░ █ █ ░░ █
+█▄▄▄▄▀              █▄▄▄▄▀            █▄▄▄▄▄▄▄▄▄▄▄▀ █▄▄▄▄▄▄▄▄▄▄▄▀ █▄▄▄▄▀ █▄▄▄▄▀
