@@ -54,14 +54,18 @@ SRCS = src/ast/ast_create.c \
        src/utils/string_builder.c \
        src/utils/vector.c
 
+BONUS_SRCS = src/bonus/bonus_polyglotism.c
+
+ifdef WITH_BONUS
+    SRCS += $(BONUS_SRCS)
+    CFLAGS += -DBONUS
+endif
+
 OBJS_DIR = obj/
 OBJS = $(SRCS:src/%.c=$(OBJS_DIR)%.o)
 
-RUNTIME_SRCS = src/runtime/yyinput.c \
-               src/runtime/yytext.c \
-               src/runtime/yyutils.c \
-               src/runtime/yywrap.c \
-               src/runtime/libmain.c
+RUNTIME_SRCS = src/libl/yywrap.c \
+               src/libl/libmain.c
 
 RUNTIME_OBJS = $(RUNTIME_SRCS:src/%.c=$(OBJS_DIR)%.o)
 
@@ -85,4 +89,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus:
+	$(MAKE) WITH_BONUS=1 all
+
+.PHONY: all clean fclean re bonus

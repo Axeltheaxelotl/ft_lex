@@ -1,4 +1,5 @@
 #include "ft_lex.h"
+#include "bonus/bonus_polyglotism.h"
 
 int main(int argc, char **argv)
 {
@@ -6,16 +7,27 @@ int main(int argc, char **argv)
     t_dfa *dfas[MAX_RULES];
     int id_counter;
 
+    bool use_python = false;
+    char *input_file = NULL;
+
     //1. ije verifie que j ai bien recu le fichier en argument
-    if (argc < 2)
+    for (int i = 1; i < argc; i++)
     {
-        fprintf(stderr, "Usage: %s <file.l>\n", argv[0]);
+        if (strcmp(argv[i], "--python") == 0)
+            use_python = true;
+        else
+            input_file = argv[i];
+    }
+
+    if (!input_file)
+    {
+        fprintf(stderr, "Usage: %s [--python] <file.l>\n", argv[0]);
         return 1;
     }
 
     //2 initialistion et lecture (parsing) du fichier .l
     lex_file_init(&lf);
-    if (!lex_file_parse(&lf, argv[1]))
+    if (!lex_file_parse(&lf, input_file))
     {
         fatal_error("Echec lors du parsing du fichier lex (.l)");
     }
@@ -51,9 +63,23 @@ int main(int argc, char **argv)
     } 
 
     //4 generation du code C final lex.yy.c par le module generator
-    if (!generate_c_file(&lf, dfas, "lex.yy.c"))
+    if (use_python)
     {
-        fatal_error("Echec lors de la generation du fichier");
+#ifdef BONUS
+        if (!generate_python_file(&lf, dfas, "lex.yy.py"))
+        {
+            fatal_error("Echec lors de la generation du fichier Python");
+        }
+#else
+        fatal_error("Le support Python necessite de compiler avec 'make bonus'");
+#endif
+    }
+    else
+    {
+        if (!generate_c_file(&lf, dfas, "lex.yy.c"))
+        {
+            fatal_error("Echec lors de la generation du fichier");
+        }
     }
 
     lex_file_free(&lf);
