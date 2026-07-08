@@ -33,7 +33,7 @@ int generate_c_file(t_lex_file *lf, t_dfa **dfas, const char *filename)
     generate_yylex(out);
 
     //ecrit la section utilisateur final apres le dernier %% (le footer)
-    if (ls->footer)
+    if (lf->footer)
         fprintf(out, "%s\n", lf->footer);
 
     //fermeture propre du fichier

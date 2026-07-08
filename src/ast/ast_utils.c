@@ -42,7 +42,7 @@ t_ast *ast_dup(t_ast *node)
 }
 
 
-/verifie si un noeud est une feuille pas d enfants
+//verifie si un noeud est une feuille pas d enfants
 int ast_is_leaf(t_ast *node)
 {
     if (!node)

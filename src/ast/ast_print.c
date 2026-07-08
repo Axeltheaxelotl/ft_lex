@@ -28,7 +28,7 @@ void ast_print(t_ast *node, int depth)
     i = 0;
     while (i < depth)
     {
-        print (" ");
+        printf (" ");
         i++;
     }
     if (node->type == AST_CHAR)

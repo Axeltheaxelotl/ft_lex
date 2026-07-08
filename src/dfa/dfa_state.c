@@ -14,7 +14,7 @@ void set_init(t_nfa_state_set *set)
     set->count = 0;
     for (int i = 0; i < 1000; i++)
     {
-        set->statues[i] = NULL;
+        set->states[i] = NULL;
     }
 }
 
@@ -32,7 +32,7 @@ bool set_contains(t_nfa_state_set *set, t_nfa_state *state)
         if (set->states[i] == state)
             return true;
     }
-    return false
+    return false;
 }
 
 
@@ -46,7 +46,7 @@ bool set_add(t_nfa_state_set *set, t_nfa_state *state)
     if (!set || !state)
         return false;
     //je evite les doublons dans l ensemble
-    if (set_countains(set, state))
+    if (set_contains(set, state))
         return false;
     //je verifie la limite de capacite de stockage
     if (set->count >= 1000)

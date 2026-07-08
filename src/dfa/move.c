@@ -19,10 +19,10 @@ t_nfa_state_set move(t_nfa_state_set *set, char symbol)
     if (!set)
         return result;
 
-        //parcourir chaque etat nfa contenu dans le set
-        for(int i = 0; i < set->count; i++)
-        {
-            t_nfa_state *state = set->states[i];
+    //parcourir chaque etat nfa contenu dans le set
+    for(int i = 0; i < set->count; i++)
+    {
+        t_nfa_state *state = set->states[i];
             t_nfa_transition *trans = state->transition;
 
             //examiner toutes les transitions sortantes

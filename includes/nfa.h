@@ -60,7 +60,7 @@ t_nfa *nfa_new(void);
 bool nfa_is_epsilon_transition(t_nfa_transition *transition);
 
 //moteur de thompson
-t_nfa *nfa_from_ast(t_ats *ast);
+t_nfa *nfa_from_ast(t_ast *ast);
 t_nfa *thompson_build(t_ast *ast, int *id_counter);
 t_nfa *thompson_char(char c,  int *id_counter);
 t_nfa *thompson_concat(t_ast *ast, int *id_counter);

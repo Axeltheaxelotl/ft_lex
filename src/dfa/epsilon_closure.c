@@ -28,7 +28,7 @@ t_nfa_state_set epsilon_closure(t_nfa_state *state)
     for (int i = 0; i < closure.count; i++)
     {
         t_nfa_state *current = closure.states[i];
-        t_nfa_transition *trans = current->transitions;
+        t_nfa_transition *trans = current->transition;
         while (trans)
         {
             //si la transition est de type epsilon
@@ -61,7 +61,7 @@ t_nfa_state_set epsilon_closure_set(t_nfa_state_set *set)
     //initialise l ensemble final avec tous les etats de l ensemble fourni
     for (int i = 0; i < set->count; i++)
     {
-        set_add(&closure, set_>states[i]);
+        set_add(&closure, set->states[i]);
     }
 
     //parcours iteratif et propagation des transitions epsilon pour tout nouvel etat decouvert

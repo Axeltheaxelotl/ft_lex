@@ -12,6 +12,10 @@ t_nfa *thompson_plus(t_ast *ast, int *id_counter)
     left = thompson_build(ast->left, id_counter);
     if(!left)
         return NULL;
+    start = nfa_create_state(id_counter);
+    end = nfa_create_state(id_counter);
+    if (!start || !end)
+        return NULL;
     //transition du nouveau debut vers le debut du sous-automate (force au moin 1 match)
     nfa_add_epsilon(start, left->start);
     //boucle de retour de la fin du sous automate vers son debut (repetiton)

@@ -49,7 +49,7 @@ t_ast *ast_question(t_ast *child);
 void ast_free(t_ast *node);
 
 //ast_print.c
-vois ast_print(t_ast *node, int depth);
+void ast_print(t_ast *node, int depth);
 
 //ast_utils.c
 int ast_count_nodes(t_ast *node);

@@ -13,12 +13,9 @@ void nfa_add_transition(t_nfa_state *from, t_nfa_state *to, t_transition_type ty
     new_trans = malloc(sizeof(t_nfa_transition));
     if (!new_trans)
         return;
-    new_trans = malloc(sizeof(t_nfa_transition));
-    if (!new_trans)
-        return;
     new_trans->type = type;
     new_trans->symbol = symbol;
-    new_trans->to = to
+    new_trans->to = to;
     //ajoute en tete de la liste chainee des transitions sortantes de l etat from
     new_trans->next = from->transition;
     from->transition = new_trans;

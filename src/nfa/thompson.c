@@ -49,7 +49,7 @@ t_nfa *thompson_build(t_ast *ast, int *id_counter)
 t_nfa *nfa_from_ast(t_ast *ast)
 {
     int id_counter;
-    t_nfa *nfa
+    t_nfa *nfa;
     id_counter = 0;
     nfa = thompson_build(ast, &id_counter);
     if (nfa && nfa->end)
@@ -78,7 +78,7 @@ static void print_state_transition(t_nfa_state *state, bool *visited)
 
 void print_nfa(t_nfa *nfa)
 {
-    bool visited[10000] = [fasle];
+    bool visited[10000] = {false};
     if (!nfa)
     {
         printf ("NFA est NULL\n");

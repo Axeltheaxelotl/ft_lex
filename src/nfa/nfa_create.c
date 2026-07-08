@@ -5,7 +5,7 @@
 //alloue et initialise une nouvelle enveloppe NFA
 t_nfa *nfa_new(void)
 {
-    t_nfa *nfa
+    t_nfa *nfa;
     nfa = malloc(sizeof(t_nfa));
     if (!nfa)
         return NULL;

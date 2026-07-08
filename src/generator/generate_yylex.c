@@ -35,8 +35,8 @@ void generate_yylex(FILE *out)
     fprintf(out, "                            if (token_len > last_accepting_len) {\n");         
     fprintf(out, "                                last_accepting_rule = i;\n");
     fprintf(out, "                                last_accepting_len = token_len;\n");           
-    fprintf(out, "                            } else if (token_len == last_accepting_len &&      
-(last_accepting_rule == -1 || i < last_accepting_rule)) {\n");
+    fprintf(out, "                            } else if (token_len == last_accepting_len && "
+                 "(last_accepting_rule == -1 || i < last_accepting_rule)) {\n");
     fprintf(out, "                                last_accepting_rule = i;\n");
     fprintf(out, "                            }\n");
     fprintf(out, "                        }\n");

@@ -2,7 +2,7 @@
 
 #include "ft_lex.h"
 
-t_nfa *thompson_or(t_ast *ast, int id_counter)
+t_nfa *thompson_or(t_ast *ast, int *id_counter)
 {
     t_nfa *left;
     t_nfa *right;
