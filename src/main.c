@@ -8,6 +8,7 @@ int main(int argc, char **argv)
     int id_counter;
 
     bool use_python = false;
+    bool use_compression = false;
     char *input_file = NULL;
 
     //1. ije verifie que j ai bien recu le fichier en argument
@@ -15,13 +16,15 @@ int main(int argc, char **argv)
     {
         if (strcmp(argv[i], "--python") == 0)
             use_python = true;
+        else if (strcmp(argv[i], "-C") == 0 || strcmp(argv[i], "--compress") == 0)
+            use_compression = true;
         else
             input_file = argv[i];
     }
 
     if (!input_file)
     {
-        fprintf(stderr, "Usage: %s [--python] <file.l>\n", argv[0]);
+        fprintf(stderr, "Usage: %s [--python] [-C/--compress] <file.l>\n", argv[0]);
         return 1;
     }
 
@@ -76,7 +79,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        if (!generate_c_file(&lf, dfas, "lex.yy.c"))
+        if (!generate_c_file(&lf, dfas, "lex.yy.c", use_compression))
         {
             fatal_error("Echec lors de la generation du fichier");
         }

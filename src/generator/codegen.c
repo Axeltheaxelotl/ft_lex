@@ -6,7 +6,7 @@ elle fait le fichier c lex.yy.c
 elle appelle successivement les fonctions qui vont ecrire les difs
 partie du fichier final : headers, tables d etats, actions, etc ...
 */
-int generate_c_file(t_lex_file *lf, t_dfa **dfas, const char *filename)
+int generate_c_file(t_lex_file *lf, t_dfa **dfas, const char *filename, bool use_compression)
 {
     FILE *out;
 
@@ -21,7 +21,7 @@ int generate_c_file(t_lex_file *lf, t_dfa **dfas, const char *filename)
         fprintf(out, "%s\n", lf->header);
 
     //ecrit les tableau a 2 dimentions pour chaque automate dfa
-    generate_tables(out, dfas, lf->rule_count);
+    generate_tables(out, dfas, lf->rule_count, use_compression);
 
     //ecrit la fonction contenant le switch pour les actions C de chaque regle
     generate_actions(out, lf);
@@ -30,7 +30,7 @@ int generate_c_file(t_lex_file *lf, t_dfa **dfas, const char *filename)
     write_template(out);
 
     //ecrit la fonction  principale generee : int yylex()
-    generate_yylex(out);
+    generate_yylex(out, use_compression);
 
     //ecrit la section utilisateur final apres le dernier %% (le footer)
     if (lf->footer)

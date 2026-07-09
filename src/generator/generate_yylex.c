@@ -6,7 +6,7 @@
     * gère la remise des caractères dans le buffer (fallback) si aucune transition n'est trouvée,   
     * et exécute les actions correspondantes.                                                       
     */                                                                                              
-void generate_yylex(FILE *out)                                                                   
+void generate_yylex(FILE *out, bool use_compression)                                                                   
 {                                                                                                
     fprintf(out, "/* -- Fonction principale d'analyse lexicale -- */\n");                        
     fprintf(out, "int yylex(void) {\n");                                                         
@@ -27,8 +27,12 @@ void generate_yylex(FILE *out)
     fprintf(out, "            else break;\n");                                                   
     fprintf(out, "            int any_alive = 0;\n");                                            
     fprintf(out, "            for (i = 0; i < RULE_COUNT; i++) {\n");                            
-    fprintf(out, "                if (states[i] != -1) {\n");                                    
-    fprintf(out, "                    states[i] = yy_transition[i][states[i]][c];\n");           
+    fprintf(out, "                if (states[i] != -1) {\n");
+    if (use_compression) {
+        fprintf(out, "                    states[i] = yy_transition[i][states[i]][yy_ec[(unsigned char)c]];\n");
+    } else {
+        fprintf(out, "                    states[i] = yy_transition[i][states[i]][(unsigned char)c];\n");
+    }
     fprintf(out, "                    if (states[i] != -1) {\n");                                
     fprintf(out, "                        any_alive = 1;\n");                                    
     fprintf(out, "                        if (yy_accepting[i][states[i]]) {\n");                 
@@ -44,6 +48,9 @@ void generate_yylex(FILE *out)
     fprintf(out, "                }\n");
     fprintf(out, "            }\n");
     fprintf(out, "            if (!any_alive) {\n");
+    fprintf(out, "                if (last_accepting_rule == -1 && token_len == 1) {\n");
+    fprintf(out, "                    break;\n");
+    fprintf(out, "                }\n");
     fprintf(out, "                yy_unget_char(c);\n");
     fprintf(out, "                token_len--;\n");
     fprintf(out, "                break;\n");

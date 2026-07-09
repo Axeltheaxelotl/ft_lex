@@ -105,7 +105,28 @@ Dans un NFA, pour un même état, il peut y avoir :
 
 L'algorithme de Thompson est très simple car il crée des petits blocs de NFA de manière modulaire (un bloc pour `*`, un bloc pour `|`, etc.) et relie ces blocs entre eux à l'aide de ces fameuses transitions fantômes Epsilon.
 
-Cependant, il est impossible de faire tourner un NFA de façon performante dans un programme informatique, car face à un "choix" non déterministe, l'ordinateur devrait tester toutes les possibilités en parallèle (ce qui prendrait trop de temps).
+**Exemple pour la regex `(a|b)*c` :**
+L'algorithme assemble les blocs :
+1. Les blocs `a` et `b` sont mis en parallèle (reliés par des transitions `ε` au début et à la fin) pour former le `OU` (`a|b`).
+2. Ce grand bloc est entouré de transitions `ε` pour boucler sur lui-même ou être ignoré, ce qui forme l'`ÉTOILE` (`(a|b)*`).
+3. Enfin, on ajoute une flèche lisant `c` vers l'état final acceptant.
+
+```text
+       ε        a        ε
+   /-----> ( ) -----> ( ) -----\
+  |                             |
+(0) --ε--> (1)               (4) --ε--> (5) --c--> (6) [Acceptant]
+  |         |                   |  ^     |
+   \        |   b        ε      |  |     |
+    \        \------> ( ) -----/   |     |
+     \                             |     |
+      \------------- ε ------------/     |
+       ^                                 |
+       |--------------- ε ---------------|
+```
+*(Schéma simplifié de Thompson pour `(a|b)*c`. L'ordinateur peut "sauter" d'un état à l'autre sans lire de caractère grâce à `ε`)*
+
+Cependant, il est impossible de faire tourner un NFA de façon performante dans un programme informatique, car face à un "choix" non déterministe (plusieurs chemins `ε` possibles en même temps), l'ordinateur devrait tester toutes les possibilités en parallèle (ce qui prendrait trop de temps).
 
 ---
 
@@ -122,6 +143,20 @@ Pour construire le DFA à partir du NFA, on fait des "groupes d'états" :
 2. Pour chaque lettre de l'alphabet (ex: `a`), on regarde où toutes ces cases nous mènent. Le groupe de cases d'arrivée forme un **nouvel état** du DFA.
 3. On répète l'opération en boucle jusqu'à ce qu'il n'y ait plus de nouveaux groupes.
 
+**Exemple de DFA pour `(a|b)*c` :**
+En regroupant tous les états accessibles par `ε`, notre NFA complexe se réduit drastiquement en un DFA très simple de seulement 2 états utiles :
+
+```text
+       a, b
+      /----\
+      |    v
+---> (A)       -- c --> (B) [Acceptant]
+     Init
+```
+* **État A** : Il correspond à la boucle `(a|b)*`. Si on lit `a` ou `b`, on reste dans le même groupe d'états `A`.
+* **État B** : Si depuis `A` on lit `c`, on arrive dans le groupe d'états final `B`. (Le mot est reconnu !)
+* *(Il y a aussi implicitement un "état puits" ou "erreur" si on lit une mauvaise lettre)*.
+
 Le résultat est un automate où on sait toujours exactement où on va, ce qui permet à `lex.yy.c` de trouver les tokens en temps constant $O(n)$ !
 
 ---
@@ -135,6 +170,17 @@ Cet algorithme cherche les états "équivalents" et les fusionne.
 * Deux états sont considérés équivalents si, peu importe la lettre qu'on lit ensuite, ils nous amèneront tous les deux vers un succès ou tous les deux vers un échec.
 * L'algorithme regroupe ces états et affine les partitions jusqu'à obtenir le DFA le plus petit possible mathématiquement.
 
+**Exemple de Minimisation :**
+Imaginons qu'avant minimisation, le Subset Construction pour `(a|b)*c` ait généré deux chemins différents (un si on a lu un `a` avant, un si on a lu un `b` avant), mais qui se comportent de la même façon :
+```text
+       a                c
+---> (A) ---> (A1) -----------> (B) [Acceptant]
+      |
+      b                 c
+      \-----> (A2) -----------> (C) [Acceptant]
+```
+La minimisation repérera que `A1` et `A2` d'une part, et `B` et `C` d'autre part, ont des comportements strictement identiques (mêmes transitions sortantes). Elle les fusionnera pour retomber sur l'automate optimal de 2 états vu précédemment !
+
 ---
 
 ### 5. La Génération du Code C
@@ -146,6 +192,20 @@ Le générateur de code C (`src/generator/`) va parcourir le DFA et écrire de g
 ```c
 // Exemple du tableau généré dans lex.yy.c
 int yy_transition[RULE_COUNT][ETATS][ALPHABET] = { ... };
+```
+
+**Exemple concret pour notre DFA `(a|b)*c` :**
+(En simplifiant notre alphabet à `a`, `b`, `c` pour l'exemple)
+
+```c
+// L'état -1 représente l'erreur (état puits/rejet)
+// Colonnes :      'a' 'b' 'c'
+int yy_transition[1][2][3] = {
+  {
+    /* Etat 0 (A) */ {  0,  0,  1 },
+    /* Etat 1 (B) */ { -1, -1, -1 }
+  }
+};
 ```
 
 La boucle principale générée (la fonction `yylex()`) est un simulateur universel de DFA :
